@@ -4,71 +4,68 @@
 
 using namespace std;
 
-class investor
+investor::investor()
 {
-    private:
-        string name;
-        string password;
-        string email;
-        string account_number;
-        string phone_number;
-        double balance;
-    public:
-        investor(){};
-        void set_name(string n)
-        {
-            name = n;
-        }
-        void set_password(string p)
-        {
-            password = p;
-        }
-        void set_email(string e)
-        {
-            email = e;
-        }
-        void set_account_number(string a)
-        {
-            account_number = a;
-        }
-        void set_phone_number(string p)
-        {
-            phone_number = p;
-        }
-        void set_balance(double b)
-        {
-            balance = b;
-        }
-        string get_name()
-        {
-            return name;
-        }
-        string get_password()
-        {
-            return password;
-        }
-        string get_email()
-        {
-            return email;
-        }
-        string get_account_number()
-        {
-            return account_number;
-        }
-        string get_phone_number()
-        {
-            return phone_number;
-        }
-        double get_balance()
-        {
-            return balance;
-        }
-        void display()
-        {
-            cout << "Name: " << name << endl;
-            cout << "Email: " << email << endl;
-            cout << "Account Number: " << account_number << endl;
-            cout << "Phone Number: " << phone_number << endl;
-            cout << "Balance: " << balance << endl;
-        }
+    name = "Jogn Doe";
+    password = "0000";
+    email = "jd@gmail.com";
+    account_number = "1234";
+    phone_number = "12345678";
+    balance = 0;
 };
+void investor::set_name(string name)
+{
+    this->name = name;
+}
+void investor::set_password(string password)
+{
+    this->password = password;
+}
+void investor::set_email(string email)
+{
+    this->email = email;
+}
+void investor::set_account_number(string account_number)
+{
+    this->account_number = account_number;
+}
+void investor::set_phone_number(string phone_number)
+{
+    this->phone_number = phone_number;
+}
+void investor::set_balance(double balance)
+{
+    this->balance = balance;
+}
+string investor::get_name()
+{
+    return name;
+}
+string investor::get_password()
+{
+    return password;
+}
+string investor::get_email()
+{
+    return email;
+}
+string investor::get_account_number()
+{
+    return account_number;
+}
+string investor::get_phone_number()
+{
+    return phone_number;
+}
+double investor::get_balance()
+{
+    return balance;
+}
+void investor::display()
+{
+    cout << "Name: " << name << endl;
+    cout << "Email: " << email << endl;
+    cout << "Account Number: " << account_number << endl;
+    cout << "Phone Number: " << phone_number << endl;
+    cout << "Balance: " << balance << endl;
+}
