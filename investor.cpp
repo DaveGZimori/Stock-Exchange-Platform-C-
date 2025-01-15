@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include "investor.h"
 
 using namespace std;
 
