@@ -69,7 +69,4 @@ void investor::display()
     cout << "Phone Number: " << phone_number << endl;
     cout << "Balance: " << balance << endl;
 }
-investor::~investor()
-{
-    cout << "Object destroyed" << endl;
-}
+investor::~investor(){}
