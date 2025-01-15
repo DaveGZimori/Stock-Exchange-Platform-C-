@@ -6,7 +6,7 @@ using namespace std;
 
 investor::investor()
 {
-    name = "Jogn Doe";
+    name = "John Doe";
     password = "0000";
     email = "jd@gmail.com";
     account_number = "1234";
@@ -68,4 +68,8 @@ void investor::display()
     cout << "Account Number: " << account_number << endl;
     cout << "Phone Number: " << phone_number << endl;
     cout << "Balance: " << balance << endl;
+}
+investor::~investor()
+{
+    cout << "Object destroyed" << endl;
 }
