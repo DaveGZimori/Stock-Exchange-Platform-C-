@@ -8,7 +8,7 @@ account::account()
 {
     account_number = "0000";
     balance = 0;
-    owner = investor().get_name();
+    investor* owner = nullptr;
 }
 
 void account::set_account_number(string account_number)
@@ -19,7 +19,7 @@ void account::set_balance(double balance)
 {
     this->balance = balance;
 }
-void account::set_owner(string owner)
+void account::set_owner(investor* owner)
 {
     this->owner = owner;
 }
@@ -31,13 +31,9 @@ double account::get_balance()
 {
     return balance;
 }
-string account::get_owner()
+investor* account::get_owner() const
 {
     return owner;
 }
-void account::display()
-{
-    cout << "Account Number: " << account_number << endl;
-    cout << "Balance: " << balance << endl;
-}
+
 account::~account(){}

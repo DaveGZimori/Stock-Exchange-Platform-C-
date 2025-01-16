@@ -3,29 +3,28 @@
 #include <iostream>
 
 using namespace std;
+
+class account;
+
 class investor
 {
     private:
         string name;
         string password;
         string email;
-        string account_number;
         string phone_number;
-        double balance;
+        account* acc;
     public:
-        investor();
+        investor(const string& name);
         ~investor();
         void set_name(string n);
         void set_password(string p);
         void set_email(string e);
-        void set_account_number(string a);
         void set_phone_number(string p);
-        void set_balance(double b);
+        void set_account(account* acc);
         string get_name();
         string get_password();
         string get_email();
-        string get_account_number();
         string get_phone_number();
-        double get_balance();
-        void display();
+        account* get_account() const; 
 };

@@ -10,15 +10,14 @@ class account
     private:
         string account_number;
         double balance;
-        string owner;
+        investor* owner;
     public:
         account();
         ~account();
         void set_account_number(string a);
         void set_balance(double b);
-        void set_owner(string o);
+        void set_owner(investor* owner);
         string get_account_number();
         double get_balance();
-        string get_owner();
-        void display();
+        investor* get_owner() const;
 };
