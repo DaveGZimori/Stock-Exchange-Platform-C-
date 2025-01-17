@@ -10,6 +10,7 @@ using namespace std;
 
 string lgname;
 string lgpassword;
+bool my_log{false};
 bool login();
 void createAccount();
 void registerInvestor(const string &name, const string &phone_number, const string &email, const string &password, const string &account_number);
@@ -25,7 +26,7 @@ int main()
     cout << "----------------------------------" << endl;
     cout << "Select 1 to login" << endl;
     cout << "Select 2 to register" << endl;
-
+    bool logStatus = false;
     int choice;
     cin >> choice;
     if (choice == 1)
@@ -35,13 +36,15 @@ int main()
     else if (choice ==2)
     {
         createAccount();
+        login();
     }
     else
     {
         cout << "Invalid choice" << endl;
     }
+    logStatus = my_log;
 
-    if(login())
+    if(logStatus)
     {
         display_investor(investor(lgname));
 
@@ -57,16 +60,14 @@ int main()
     return 0;
 }
 
-
 bool login()
 {
-    bool log = false;
     cout << "Enter your name: ";
     cin >> lgname;
     cout << "Enter your password: ";
     cin >> lgpassword;
-    log = searchInCSV("Investors.csv", lgname, lgpassword);
-    if (log)
+    my_log = searchInCSV("Investors.csv", lgname, lgpassword);
+    if (my_log)
     {
         cout << "Login successful" << endl;
     }
@@ -74,7 +75,7 @@ bool login()
     {
         cout << "Login failed" << endl;
     }
-    return log;
+    return my_log;
 }
 
 void createAccount()
@@ -95,13 +96,14 @@ void createAccount()
     account Acc1;
     Acc1.set_owner(&A);
     A.set_account(&Acc1);
-    display_investor(A);
+     A.get_account()->set_account_number("5674");
     cout << "Account created successfully" << endl;
     cout << "----------------------------------" << endl;
-    cout << "login" <<endl;
-    A.get_account()->set_account_number("5674");
+    cout << "Account details: " << endl;
+    display_investor(A);
+    cout << "Proceed to login" <<endl;
+    cout << "----------------------------------" << endl;
     registerInvestor(name, phone_number, email, password, A.get_account()->get_account_number());
-    login();
 }
 
 void registerInvestor(const string &name, const string &phone_number, const string &email, const string &password, const string &account_number)
@@ -115,7 +117,7 @@ void registerInvestor(const string &name, const string &phone_number, const stri
     }
 
     // Append the new investor data
-    file << name << "," << password << "," << email << "," << phone_number << "," << account_number, "\n";
+    file << name << "," << phone_number  << "," << email << "," << password << "," << account_number, "\n";
 
     // Close the file
     file.close();
