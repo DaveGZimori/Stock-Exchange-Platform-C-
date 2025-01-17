@@ -11,7 +11,8 @@ using namespace std;
 string lgname;
 string lgpassword;
 bool login();
-void signup();
+void createAccount();
+void registerInvestor(const string &name, const string &phone_number, const string &email, const string &password, const string &account_number);
 
 void display_investor(investor A);
 void display_account(account Acc1);
@@ -20,7 +21,6 @@ bool searchInCSV(const std::string &filename, const std::string &name, const std
 
 int main() 
 {
-
     cout << "Welcome to the Uzumba Stock Exchange" << endl;
     cout << "----------------------------------" << endl;
     cout << "Select 1 to login" << endl;
@@ -34,7 +34,7 @@ int main()
     }
     else if (choice ==2)
     {
-        signup();
+        createAccount();
     }
     else
     {
@@ -77,15 +77,48 @@ bool login()
     return log;
 }
 
-void signup()
+void createAccount()
 {
     string name;
     string password;
     string email;
     string phone_number;
-    cout << "Enter your name: "<<endl;
+    cout << "Enter your name: ";
     cin >> name;
+    cout << "Enter your password: ";
+    cin >> password;
+    cout << "Enter your email: ";
+    cin >> email;
+    cout << "Enter your phone number: ";
+    cin >> phone_number;
+    investor A(name);
+    account Acc1;
+    Acc1.set_owner(&A);
+    A.set_account(&Acc1);
+    display_investor(A);
+    cout << "Account created successfully" << endl;
+    cout << "----------------------------------" << endl;
+    cout << "login" <<endl;
+    A.get_account()->set_account_number("5674");
+    registerInvestor(name, phone_number, email, password, A.get_account()->get_account_number());
+    login();
+}
 
+void registerInvestor(const string &name, const string &phone_number, const string &email, const string &password, const string &account_number)
+{
+    // Open the CSV file for appending
+    std::ofstream file("Investors.csv", std::ios_base::app);
+
+    if (!file.is_open()) 
+    {
+        std::cerr << "Error opening file" << std::endl;
+    }
+
+    // Append the new investor data
+    file << name << "," << password << "," << email << "," << phone_number << "," << account_number, "\n";
+
+    // Close the file
+    file.close();
 }
 
 bool searchInCSV(const string &filename, const string &name, const string &password) 
