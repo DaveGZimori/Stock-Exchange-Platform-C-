@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <iomanip>
+#include <algorithm> // For std::find_if
 #include "investor.h"
 #include "account.h"
 
@@ -24,10 +25,12 @@ bool searchInCSV(const std::string &filename, const std::string &name, const std
 
 string getCellDataByFirstColumn(const std::string& filename, const std::string& searchValue, int colIndex) ;
 
+std::string trim(const std::string &str) ;
+
 void buy_shares();
 void sell_shares();
 void view_transaction_history();
-void view_stock_prices(const string& filename);
+void view_stock_prices(const string &filename, const vector<size_t> &columnWidths);
 void view_stock_market_news();
 
 int main() 
@@ -88,7 +91,7 @@ int main()
         }
         else if (selection == 5)
         {
-            view_stock_prices("ZSEDIRECT.csv");
+            view_stock_prices("ZSEDIRECT.csv", {6, 6, 6, 4, 4, 4, 4});
         }
         else if (selection == 6)
         {
@@ -216,7 +219,7 @@ void registerInvestor(const string &name, const string &phone_number, const stri
     }
 
     // Append the new investor data
-    file << name << "," << phone_number  << "," << email << "," << password << "," << account_number, "\n";
+    file << name << "," << phone_number  << "," << email << "," << password << "," << account_number,"\n";
 
     // Close the file
     file.close();
@@ -306,59 +309,78 @@ void view_transaction_history()
 
 }
 
+// Function to trim leading and trailing whitespace
+std::string trim(const std::string &str) 
+{
+    const auto begin = str.begin();
+    const auto end = str.end();
+
+    auto trimmedBegin = std::find_if_not(begin, end, ::isspace);
+    auto trimmedEnd = std::find_if_not(std::reverse_iterator<std::string::const_iterator>(end),
+                                        std::reverse_iterator<std::string::const_iterator>(trimmedBegin), 
+                                        ::isspace).base();
+
+    return std::string(trimmedBegin, trimmedEnd);
+}
+
 // Function to read and display the listed stock prices
-void view_stock_prices(const std::string& filename) 
+void view_stock_prices(const string &filename, const vector<size_t> &columnWidths)
 {
     std::ifstream file(filename);
+    std::string line;
 
-    if (!file.is_open()) 
-    {
-        std::cerr << "Error: Could not open file " << filename << std::endl;
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file: " << filename << std::endl;
         return;
     }
 
-    std::vector<std::vector<std::string>> data;
-    std::string line;
+    std::vector<std::vector<std::string>> data; // To store the entire CSV data
 
     // Read the CSV file line by line
-    while (std::getline(file, line)) 
-    {
-        std::vector<std::string> row;
-        std::stringstream lineStream(line);
-        std::string cell;
-
-        // Split the line into cells by commas
-        while (std::getline(lineStream, cell, ',')) 
-        {
-            row.push_back(cell);
+    while (std::getline(file, line)) {
+        // Trim whitespace from the line
+        line = trim(line);
+        
+        // Skip empty lines
+        if (line.empty()) {
+            continue;
         }
-        data.push_back(row);
+
+        std::stringstream ss(line);
+        std::string value;
+        std::vector<std::string> row;
+
+        // Split the line into individual values
+        while (std::getline(ss, value, ',')) {
+            row.push_back(trim(value)); // Trim each value as well
+        }
+
+        // Only add rows with actual data
+        if (!row.empty()) {
+            data.push_back(row); // Store the row in data
+        }
     }
 
     file.close();
 
+    // Display the table without borders
     if (data.empty()) 
     {
-        std::cout << "No data to display!" << std::endl;
+        std::cout << "No data available to display." << std::endl;
         return;
     }
 
-    // Calculate the maximum width for each column
-    std::vector<size_t> columnWidths(data[0].size(), 0);
-    for (const auto& row : data) 
+    // Print the data
+    for (const auto &row : data) 
     {
         for (size_t i = 0; i < row.size(); ++i) {
-            columnWidths[i] = std::max(columnWidths[i], row[i].length());
+            cout << std::setw(5) << row[i]; // Display each cell
+            if (i < row.size() - 1) 
+            {
+                std::cout << " | "; // Separator between columns
+            }
         }
-    }
-
-    // Display the CSV file as a table
-    for (const auto& row : data) 
-    {
-        for (size_t i = 0; i < row.size(); ++i) {
-            std::cout << std::setw(columnWidths[i] + 2) << std::left << row[i];
-        }
-        std::cout << std::endl;
+        std::cout << std::endl; // New line after each row
     }
 }
 
