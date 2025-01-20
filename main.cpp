@@ -20,6 +20,12 @@ void display_account(account Acc1);
 
 bool searchInCSV(const std::string &filename, const std::string &name, const std::string &password);
 
+void buy_shares();
+void sell_shares();
+void view_transaction_history();
+void view_stock_prices();
+void view_stock_market_news();
+
 int main() 
 {
     cout << "Welcome to the Uzumba Stock Exchange" << endl;
@@ -57,9 +63,42 @@ int main()
         cout << "Select 5 to view stock prices" << endl;
         cout << "Select 6 to view stock market news" << endl;
     }
+
+    int selection;
+    cin >> selection;
+    if (selection == 1)
+    {
+        display_account(*investor(lgname).get_account()); // display account details
+    }
+    else if (selection == 2)
+    {
+        buy_shares();
+    }
+    else if (selection == 3)
+    {
+        // sell shares
+        sell_shares();
+    }
+    else if (selection == 4)
+    {
+        // view transaction history
+        view_transaction_history();
+    }
+    else if (selection == 5)
+    {
+        // view stock prices
+        view_stock_prices();
+    }
+    else if (selection == 6)
+    {
+        // view stock market news
+        view_stock_market_news();
+    }
     return 0;
 }
 
+// Function definitions
+// create a login function
 bool login()
 {
     cout << "Enter your name: ";
@@ -77,7 +116,7 @@ bool login()
     }
     return my_log;
 }
-
+// create a function to create an account
 void createAccount()
 {
     string name;
@@ -106,6 +145,7 @@ void createAccount()
     registerInvestor(name, phone_number, email, password, A.get_account()->get_account_number());
 }
 
+// create a function to register an investor
 void registerInvestor(const string &name, const string &phone_number, const string &email, const string &password, const string &account_number)
 {
     // Open the CSV file for appending
@@ -123,6 +163,7 @@ void registerInvestor(const string &name, const string &phone_number, const stri
     file.close();
 }
 
+// create a function to search for an investor in the CSV file
 bool searchInCSV(const string &filename, const string &name, const string &password) 
 {
     std::ifstream file("Investors.csv");
@@ -169,6 +210,7 @@ bool searchInCSV(const string &filename, const string &name, const string &passw
     return found;
 }
 
+// create a function to display an investor
 void display_investor(investor A)
 {
     cout << "Name: " << A.get_name() << endl;
@@ -179,6 +221,7 @@ void display_investor(investor A)
     cout << "Balance: " << A.get_account()->get_balance() << endl;
 }
 
+// create a function to display an account
 void display_account(account Acc1)
 {
     cout << "Account number: " << Acc1.get_account_number() << endl;

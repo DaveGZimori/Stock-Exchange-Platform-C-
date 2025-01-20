@@ -15,7 +15,7 @@ class investor
         string phone_number;
         account* acc;
     public:
-        investor(const string& name);
+        investor(const string& name); // constructor with argument passed by reference
         ~investor();
         void set_name(string n);
         void set_password(string p);
