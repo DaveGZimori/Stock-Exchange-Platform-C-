@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include <iomanip>
 #include "investor.h"
 #include "account.h"
 
@@ -11,6 +12,7 @@ using namespace std;
 string lgname;
 string lgpassword;
 bool my_log{false};
+bool logStatus = false;
 bool login();
 void createAccount();
 void registerInvestor(const string &name, const string &phone_number, const string &email, const string &password, const string &account_number);
@@ -23,7 +25,7 @@ bool searchInCSV(const std::string &filename, const std::string &name, const std
 void buy_shares();
 void sell_shares();
 void view_transaction_history();
-void view_stock_prices();
+void view_stock_prices(const string& filename);
 void view_stock_market_news();
 
 int main() 
@@ -32,7 +34,7 @@ int main()
     cout << "----------------------------------" << endl;
     cout << "Select 1 to login" << endl;
     cout << "Select 2 to register" << endl;
-    bool logStatus = false;
+    
     int choice;
     cin >> choice;
     if (choice == 1)
@@ -48,9 +50,10 @@ int main()
     {
         cout << "Invalid choice" << endl;
     }
+
     logStatus = my_log;
 
-    if(logStatus)
+    if(logStatus==true)
     {
         display_investor(investor(lgname));
 
@@ -62,42 +65,43 @@ int main()
         cout << "Select 4 to view transaction history" << endl;
         cout << "Select 5 to view stock prices" << endl;
         cout << "Select 6 to view stock market news" << endl;
-    }
 
-    int selection;
-    cin >> selection;
-    if (selection == 1)
-    {
-        display_account(*investor(lgname).get_account()); // display account details
-    }
-    else if (selection == 2)
-    {
-        buy_shares();
-    }
-    else if (selection == 3)
-    {
-        // sell shares
-        sell_shares();
-    }
-    else if (selection == 4)
-    {
-        // view transaction history
-        view_transaction_history();
-    }
-    else if (selection == 5)
-    {
-        // view stock prices
-        view_stock_prices();
-    }
-    else if (selection == 6)
-    {
-        // view stock market news
-        view_stock_market_news();
+        int selection;
+        cin >> selection;
+        if (selection == 1)
+        {
+            display_account(*investor(lgname).get_account()); // display account details
+        }
+        else if (selection == 2)
+        {
+            buy_shares();
+        }
+        else if (selection == 3)
+        {
+            sell_shares();
+        }
+        else if (selection == 4)
+        {
+            view_transaction_history();
+        }
+        else if (selection == 5)
+        {
+            view_stock_prices("ZSEDIRECT.csv");
+        }
+        else if (selection == 6)
+        {
+            view_stock_market_news();
+        }
+        else
+        {
+            cout << "Invalid selection" << endl;
+        }
     }
     return 0;
 }
 
 // Function definitions
+
 // create a login function
 bool login()
 {
@@ -230,4 +234,80 @@ void display_account(account Acc1)
     cout << "Password: " << Acc1.get_owner()->get_password() << endl;
     cout << "Email: " << Acc1.get_owner()->get_email() << endl;
     cout << "Phone number: " << Acc1.get_owner()->get_phone_number() << endl;
+}
+
+void buy_shares()
+{
+
+}
+
+void sell_shares()
+{
+
+}
+
+void view_transaction_history()
+{
+
+}
+
+// Function to read and display the listed stock prices
+void view_stock_prices(const std::string& filename) 
+{
+    std::ifstream file(filename);
+
+    if (!file.is_open()) 
+    {
+        std::cerr << "Error: Could not open file " << filename << std::endl;
+        return;
+    }
+
+    std::vector<std::vector<std::string>> data;
+    std::string line;
+
+    // Read the CSV file line by line
+    while (std::getline(file, line)) 
+    {
+        std::vector<std::string> row;
+        std::stringstream lineStream(line);
+        std::string cell;
+
+        // Split the line into cells by commas
+        while (std::getline(lineStream, cell, ',')) 
+        {
+            row.push_back(cell);
+        }
+        data.push_back(row);
+    }
+
+    file.close();
+
+    if (data.empty()) 
+    {
+        std::cout << "No data to display!" << std::endl;
+        return;
+    }
+
+    // Calculate the maximum width for each column
+    std::vector<size_t> columnWidths(data[0].size(), 0);
+    for (const auto& row : data) 
+    {
+        for (size_t i = 0; i < row.size(); ++i) {
+            columnWidths[i] = std::max(columnWidths[i], row[i].length());
+        }
+    }
+
+    // Display the CSV file as a table
+    for (const auto& row : data) 
+    {
+        for (size_t i = 0; i < row.size(); ++i) {
+            std::cout << std::setw(columnWidths[i] + 2) << std::left << row[i];
+        }
+        std::cout << std::endl;
+    }
+}
+
+void view_stock_market_news()
+{
+
 }
