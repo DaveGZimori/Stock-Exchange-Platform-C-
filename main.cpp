@@ -22,6 +22,8 @@ void display_account(account Acc1);
 
 bool searchInCSV(const std::string &filename, const std::string &name, const std::string &password);
 
+string getCellDataByFirstColumn(const std::string& filename, const std::string& searchValue, int colIndex) ;
+
 void buy_shares();
 void sell_shares();
 void view_transaction_history();
@@ -55,7 +57,7 @@ int main()
 
     if(logStatus==true)
     {
-        display_investor(investor(lgname));
+        //display_investor(investor(lgname));
 
         cout << "----------------------------------" << endl;
         cout << "Main menu" << endl;
@@ -110,9 +112,17 @@ bool login()
     cout << "Enter your password: ";
     cin >> lgpassword;
     my_log = searchInCSV("Investors.csv", lgname, lgpassword);
+    
     if (my_log)
     {
         cout << "Login successful" << endl;
+        string acc_nmbr = getCellDataByFirstColumn("Investors.csv", lgname, 4);
+        investor A(lgname);
+        account Acc1;
+        Acc1.set_owner(&A);
+        A.set_account(&Acc1);
+        A.get_account()->set_account_number(acc_nmbr);
+        display_investor(A);
     }
     else
     {
@@ -120,6 +130,51 @@ bool login()
     }
     return my_log;
 }
+
+// Function to search for a row by its first-column value and get data from a specific cell
+string getCellDataByFirstColumn(const std::string& filename, const std::string& searchValue, int colIndex) 
+{
+    std::ifstream file(filename);
+
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open file " << filename << std::endl;
+        return "";
+    }
+
+    string line;
+
+    // Iterate through each line in the file
+    while (std::getline(file, line)) 
+    {
+        stringstream lineStream(line);
+        string cell;
+        vector<std::string> row;
+
+        // Split the line into cells
+        while (std::getline(lineStream, cell, ',')) 
+        {
+            row.push_back(cell);
+        }
+
+        // Check if the first column matches the search value
+        if (!row.empty() && row[0] == searchValue) {
+            // Ensure the column index is within range
+            if (colIndex >= 0 && colIndex < static_cast<int>(row.size())) 
+            {
+                return row[colIndex];
+            } else 
+            {
+                std::cerr << "Error: Column index out of range!" << std::endl;
+                return "";
+            }
+        }
+    }
+
+    std::cerr << "Error: Row with value '" << searchValue << "' in the first column not found!" << std::endl;
+    return "";
+}
+
+
 // create a function to create an account
 void createAccount()
 {
@@ -139,7 +194,7 @@ void createAccount()
     account Acc1;
     Acc1.set_owner(&A);
     A.set_account(&Acc1);
-     A.get_account()->set_account_number("5674");
+    A.get_account()->set_account_number("5674");
     cout << "Account created successfully" << endl;
     cout << "----------------------------------" << endl;
     cout << "Account details: " << endl;
