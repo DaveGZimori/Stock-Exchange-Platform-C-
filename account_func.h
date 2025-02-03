@@ -3,11 +3,11 @@
 #include <string>
 #include <fstream>
 #include "investor.h"
+#include "account.h"
 
 using namespace std;
 
-bool my_log{false};
-bool logStatus = false;
+
 bool login();
 void createAccount();
 void registerInvestor(const string &name, const string &phone_number, const string &email, const string &password, const string &account_number);
