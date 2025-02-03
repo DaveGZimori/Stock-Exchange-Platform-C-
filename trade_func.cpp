@@ -2,6 +2,7 @@
 #include "trade_func.h"
 #include <algorithm> // For std::find_if
 #include <iomanip> // For std::setw
+#include <cstdlib>
 
 using namespace std;
 
@@ -97,5 +98,23 @@ void view_stock_prices(const string &filename, const vector<size_t> &columnWidth
 
 void view_stock_market_news()
 {
+    std::string pdfPath = "Guide_2021.pdf";
 
+    #ifdef _WIN32
+        // Windows: Open PDF with default viewer
+        std::string command = "start " + pdfPath;
+    #elif __APPLE__
+        // macOS: Open PDF with default viewer
+        std::string command = "open " + pdfPath;
+    #else
+        // Linux/Unix: Open PDF with default viewer
+        std::string command = "xdg-open " + pdfPath;
+    #endif
+
+    int result = std::system(command.c_str());
+    if (result == 0) {
+        std::cout << "PDF opened successfully." << std::endl;
+    } else {
+        std::cerr << "Failed to open PDF." << std::endl;
+    }
 }

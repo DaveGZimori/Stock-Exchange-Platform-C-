@@ -50,6 +50,7 @@ int main()
         cout << "Select 4 to view transaction history" << endl;
         cout << "Select 5 to view stock prices" << endl;
         cout << "Select 6 to view stock market news" << endl;
+        cout << "Select 7 to logout" << endl;
 
         int selection;
         cin >> selection;
