@@ -21,12 +21,12 @@ bool login()
     {
         cout << "Login successful" << endl;
         string acc_nmbr = getCellDataByFirstColumn("Investors.csv", lgname, 4);
-        investor A(lgname);
-        account Acc1;
-        Acc1.set_owner(&A);
-        A.set_account(&Acc1);
-        A.get_account()->set_account_number(acc_nmbr);
-        display_investor(A);
+        investor current_investor(lgname);
+        account current_account;
+        current_account.set_owner(&current_investor);
+        current_investor.set_account(&current_account);
+        current_investor.get_account()->set_account_number(acc_nmbr);
+        display_investor(current_investor);
     }
     else
     {

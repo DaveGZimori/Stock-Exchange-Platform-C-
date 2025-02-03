@@ -1,14 +1,61 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
 #include "trade_func.h"
+#include "account.h"
+#include "investor.h"
+#include "account_func.h"
 #include <algorithm> // For std::find_if
 #include <iomanip> // For std::setw
 #include <cstdlib>
 
 using namespace std;
 
-void buy_shares()
+void buy_shares(investor A)
 {
-
+    cout << "Enter the stock symbol: ";
+    string stock_symbol;
+    cin >> stock_symbol;
+    cout << "Enter the number of shares to buy: ";
+    int num_shares;
+    cin >> num_shares;
+    cout << "Enter the price per share: ";
+    double price_per_share;
+    cin >> price_per_share;
+    cout << "Total cost: " << num_shares * price_per_share << endl;
+    cout << "Proceed to buy shares? (Y/N): ";
+    char choice;
+    cin >> choice;
+    if (choice == 'Y' || choice == 'y')
+    {
+        bool required_stock = search_stock("ZSEDIRECT.csv", stock_symbol);
+        if (required_stock)
+        {
+            double current_bal = A.get_account()->get_balance();
+            double total_cost = num_shares * price_per_share;
+            if (current_bal >= total_cost)
+            {
+                // Update the transaction history
+                // Update the investor's account balance
+                // Update the investor's share portfolio
+                // Display the updated account details
+                cout << "Shares bought successfully" << endl;
+            }
+            else
+            {
+                cout << "Insufficient funds" << endl;
+            }
+        }
+        else
+        {
+            cout << "Transaction cancelled" << endl;
+        }
+    }
+    else
+    {
+        cout << "Transaction cancelled" << endl;
+    }
 }
 
 void sell_shares()
@@ -117,4 +164,47 @@ void view_stock_market_news()
     } else {
         std::cerr << "Failed to open PDF." << std::endl;
     }
+}
+
+bool search_stock(const string &filename, const string &stock_symbol)
+{
+    std::ifstream file(filename); // Open the file
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open file " << filename << std::endl;
+        return false; // Return false if the file cannot be opened
+    }
+
+    std::string line; // To store each line of the CSV
+    int lineNumber = 0; // Line tracker (optional, useful for debugging)
+    int stock_symbol_column = 3; // Column index for the stock symbol
+    // Read the file line by line
+    while (std::getline(file, line)) 
+    {
+        lineNumber++;
+        
+        // Use a stringstream to parse the line
+        std::stringstream ss(line);
+        std::string cell;
+        int currentColumn = 0;
+
+        // Iterate through columns in the current line
+        while (std::getline(ss, cell, ',')) 
+        {
+            // Check if the current column matches the desired column
+            if (currentColumn == stock_symbol_column) 
+            {
+                if (cell == stock_symbol) 
+                {
+                    std::cout << "Found value '" << stock_symbol << "' in column " 
+                              << stock_symbol_column << " at line " << lineNumber << "." << std::endl;
+                    return true; // Value found
+                }
+            }
+            currentColumn++;
+        }
+    }
+
+    // If the value was not found in the specified column
+    std::cout << "Value '" << stock_symbol << "' not found " << "." << std::endl;
+    return false;
 }

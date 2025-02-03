@@ -60,7 +60,7 @@ int main()
         }
         else if (selection == 2)
         {
-            buy_shares();
+            buy_shares(current_investor);
         }
         else if (selection == 3)
         {
