@@ -15,6 +15,8 @@ using namespace std;
 
 int main() 
 {
+    while(true)
+    {
     cout << "Welcome to the Uzumba Stock Exchange" << endl;
     cout << "----------------------------------" << endl;
     cout << "Select 1 to login" << endl;
@@ -82,6 +84,7 @@ int main()
         {
             cout << "Invalid selection" << endl;
         }
+    }
     }
     return 0;
 }

@@ -30,10 +30,11 @@ void buy_shares(investor A)
     if (choice == 'Y' || choice == 'y')
     {
         bool required_stock = search_stock("ZSEDIRECT.csv", stock_symbol);
-        if (required_stock)
+        if (required_stock==true)
         {
             double current_bal = A.get_account()->get_balance();
             double total_cost = num_shares * price_per_share;
+            cout << "Current balance: " << current_bal << endl;
             if (current_bal >= total_cost)
             {
                 // Update the transaction history
@@ -49,12 +50,12 @@ void buy_shares(investor A)
         }
         else
         {
-            cout << "Transaction cancelled" << endl;
+            cout << "Stock not found" << endl;
         }
     }
     else
     {
-        cout << "Transaction cancelled" << endl;
+        cout << "Transaction failed" << endl;
     }
 }
 
@@ -168,15 +169,16 @@ void view_stock_market_news()
 
 bool search_stock(const string &filename, const string &stock_symbol)
 {
+    bool search_status = false;
     std::ifstream file(filename); // Open the file
     if (!file.is_open()) {
         std::cerr << "Error: Could not open file " << filename << std::endl;
-        return false; // Return false if the file cannot be opened
+        return search_status; // Return false if the file cannot be opened
     }
 
     std::string line; // To store each line of the CSV
     int lineNumber = 0; // Line tracker (optional, useful for debugging)
-    int stock_symbol_column = 3; // Column index for the stock symbol
+    int stock_symbol_column = 2; // Column index for the stock symbol
     // Read the file line by line
     while (std::getline(file, line)) 
     {
@@ -195,16 +197,18 @@ bool search_stock(const string &filename, const string &stock_symbol)
             {
                 if (cell == stock_symbol) 
                 {
-                    std::cout << "Found value '" << stock_symbol << "' in column " 
-                              << stock_symbol_column << " at line " << lineNumber << "." << std::endl;
-                    return true; // Value found
+                    std::cout << "You're purchasing " << stock_symbol << std::endl;
+                    search_status = true; // Value found
+                    break; // Exit the loop if found
                 }
             }
             currentColumn++;
         }
     }
-
-    // If the value was not found in the specified column
-    std::cout << "Value '" << stock_symbol << "' not found " << "." << std::endl;
-    return false;
+    if (!search_status) 
+    {
+        // If the value was not found in the specified column
+        std::cout << "Stock '" << stock_symbol << "' not found. " << std::endl;
+    }
+    return search_status;
 }
